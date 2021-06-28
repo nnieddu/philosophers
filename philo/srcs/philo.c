@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:04:44 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/28 10:57:52 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/06/28 11:28:45 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	*ft_philo(void *phil)
 	t_philo	*philo;
 
 	philo = phil;
+	if ((philo->name - 1) % 2 == 0)
+		usleep(philo->args->time_to_eat * 1000);
 	while (!philo->args->stop)
 	{
 		ft_take_fork(philo);

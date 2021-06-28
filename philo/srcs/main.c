@@ -6,26 +6,11 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 12:16:59 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/28 10:57:12 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/06/28 11:18:44 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/philo.h"
-
-void	*ft_monitor_meals(void *phil)
-{
-	t_args	*args;
-
-	args = phil;
-	while (!args->stop)
-	{
-		pthread_mutex_lock(&args->stop_mutex);
-		if (args->end_meals == args->nbr_of_philos)
-			args->stop = 1;
-		pthread_mutex_unlock(&args->stop_mutex);
-	}
-	return (NULL);
-}
 
 void	*ft_monitor(void *phil)
 {
@@ -47,7 +32,9 @@ void	*ft_monitor(void *phil)
 			pthread_mutex_unlock(philo->right);
 			pthread_mutex_unlock(philo->left);
 			philo->args->stop = 1;
-		}		
+		}
+		if (philo->args->end_meals == philo->args->nbr_of_philos)
+			philo->args->stop = 1;
 		pthread_mutex_unlock(&philo->args->stop_mutex);
 		pthread_mutex_unlock(&philo->check_mutex);
 	}
@@ -84,11 +71,6 @@ void	ft_create_philos(t_args *args)
 		pthread_create(&args->philos[i].thread, NULL, \
 			ft_philo, &args->philos[i]);
 		pthread_create(&thread, NULL, ft_monitor, &args->philos[i]);
-		pthread_detach(thread);
-	}
-	if (args->count_each_must_eat != 0)
-	{
-		pthread_create(&thread, NULL, ft_monitor_meals, args);
 		pthread_detach(thread);
 	}
 }
