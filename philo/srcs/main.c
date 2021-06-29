@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 12:16:59 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/29 05:43:05 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/06/29 06:11:18 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	*ft_monitor(void *phil)
 		if (ms >= philo->args->time_to_die && philo->args->stop == 0)
 		{
 			printf("[%ld]\t%d\t %s\n", ms, philo->name, "died");
-			// pthread_mutex_unlock(philo->right);
-			// pthread_mutex_unlock(philo->left);
+			pthread_mutex_unlock(philo->right);
+			pthread_mutex_unlock(philo->left);
 			philo->args->stop = 1;
 		}
 		if (philo->args->end_of_meals == philo->args->nbr_of_philos)
@@ -50,6 +50,7 @@ void	ft_clean(t_args *args)
 	i = -1;
 	while (++i < args->nbr_of_philos)
 		pthread_mutex_destroy(&args->forks[i]);
+	pthread_mutex_destroy(&args->stop_mutex);
 	free(args->forks);
 }
 
