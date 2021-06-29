@@ -6,39 +6,11 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:08:50 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/28 10:58:28 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/06/29 05:24:16 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/philo.h"
-
-long	ft_time(struct timeval now)
-{
-	long	ms;
-
-	ms = now.tv_sec * 1000;
-	ms += now.tv_usec / 1000;
-	return (ms);
-}
-
-void	ft_print_status(t_philo *philo, char *str)
-{
-	long			ms;
-	struct timeval	now;
-
-	pthread_mutex_lock(&philo->args->stop_mutex);
-	gettimeofday(&now, NULL);
-	ms = ft_time(now) - ft_time(philo->args->start_t);
-	if (!philo->args->stop)
-		printf("[%ld]\t%d\t %s\n", ms, philo->name, str);
-	pthread_mutex_unlock(&philo->args->stop_mutex);
-}
-
-int	ft_error(char *str)
-{
-	printf("%s", str);
-	return (1);
-}
 
 int	ft_atoi(const char *str)
 {
@@ -76,4 +48,32 @@ int	ft_malloc(void *dst, size_t size)
 		return (1);
 	memset(*(void **)dst, 0, size);
 	return (0);
+}
+
+void	ft_print_status(t_philo *philo, char *str)
+{
+	long			ms;
+	struct timeval	now;
+
+	pthread_mutex_lock(&philo->args->stop_mutex);
+	gettimeofday(&now, NULL);
+	ms = ft_time(now) - ft_time(philo->args->start_t);
+	if (!philo->args->stop)
+		printf("[%ld]\t%d\t %s\n", ms, philo->name, str);
+	pthread_mutex_unlock(&philo->args->stop_mutex);
+}
+
+long	ft_time(struct timeval now)
+{
+	long	ms;
+
+	ms = now.tv_sec * 1000;
+	ms += now.tv_usec / 1000;
+	return (ms);
+}
+
+int	ft_error(char *str)
+{
+	printf("%s", str);
+	return (1);
 }

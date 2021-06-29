@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:06:19 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/28 10:59:11 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/06/29 05:40:05 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	ft_parse_args(t_args *args, int ac, char **av)
 	args->time_to_die = ft_atoi(av[2]);
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
+	args->count_each_must_eat = -1;
 	if (ac == 6)
 		args->count_each_must_eat = ft_atoi(av[5]);
 }
@@ -54,12 +55,12 @@ int	ft_init_philos(t_args *args)
 	{
 		args->philos[i].name = i + 1;
 		pthread_mutex_init(&args->forks[i], NULL);
-		pthread_mutex_init(&args->philos[i].check_mutex, NULL);
 		if (i == 0)
 			args->philos[i].left = &args->forks[args->nbr_of_philos - 1];
 		else
 			args->philos[i].left = &args->forks[i - 1];
 		args->philos[i].right = &args->forks[i];
+		args->philos[i].nbr_of_meals = 0;
 		args->philos[i].args = args;
 	}
 	return (0);

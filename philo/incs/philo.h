@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 12:24:59 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/28 10:57:35 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/06/29 05:40:02 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ typedef struct s_philo
 	pthread_t		thread;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
-	pthread_mutex_t	check_mutex;
 	struct s_args	*args;
 	struct timeval	last_meal;
 }					t_philo;
@@ -35,10 +34,10 @@ typedef struct s_philo
 typedef struct s_args
 {
 	int				nbr_of_philos;
-	int				end_meals;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
+	int				end_of_meals;
 	int				count_each_must_eat;
 	int				stop;
 	pthread_mutex_t	stop_mutex;
