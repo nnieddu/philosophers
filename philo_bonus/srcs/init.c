@@ -6,11 +6,60 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:06:19 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/29 12:01:01 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/07/02 12:07:20 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/philo.h"
+
+static int	ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (*str++)
+		++i;
+	return (i);
+}
+
+char	*ft_name(char *name, int n)
+{
+	char	*result;
+	int		num;
+	int		i;
+
+	i = 0;
+	num = n;
+	while (num)
+	{
+		num /= 10;
+		++i;
+	}
+	result = malloc(sizeof(char) * (i + ft_strlen(name) + 1));
+	if (result == NULL)
+		return (NULL);
+	num = -1;
+	while (++num < i)
+		result[num] = name[num];
+	while (n)
+	{
+		result[i++] = n % 10 + '0';
+		n /= 10;
+	}
+	result[i] = 0;
+	return (result);
+}
+
+static sem_t	*ft_sem_init(const char *name, unsigned int value)
+{
+	sem_t	*sem;
+
+	sem = sem_open(name, O_CREAT | O_EXCL, 0644, value);
+	if (sem != SEM_FAILED)
+		return (sem);
+	sem_unlink(name);
+	return (sem_open(name, O_CREAT | O_EXCL, 0644, value));
+}
 
 void	ft_parse_args(t_args *args, int ac, char **av)
 {
@@ -42,26 +91,20 @@ int	ft_init_philos(t_args *args)
 {
 	int		i;
 
-	pthread_mutex_init(&args->stop_mutex, NULL);
+	args->acting = ft_sem_init("acting", 1);
+	args->forks = ft_sem_init("forks", args->nbr_of_philos + 1);
+	args->finish = ft_sem_init("finish", 0);
+	args->finish_meals = ft_sem_init("finish_meals", 0);
 	if (ft_malloc(&args->philos, sizeof(t_philo) * args->nbr_of_philos))
-		return (ft_error("Error : malloc error.\n"));
-	if (ft_malloc(&args->forks, sizeof(pthread_mutex_t) * args->nbr_of_philos))
+		return (ft_error("Error : malloc error\n"));
+	i = 0;
+	while (i < args->nbr_of_philos)
 	{
-		free(args->philos);
-		return (ft_error("Error : malloc error.\n"));
-	}
-	i = -1;
-	while (++i < args->nbr_of_philos)
-	{
-		args->philos[i].name = i + 1;
-		pthread_mutex_init(&args->forks[i], NULL);
-		if (i == 0)
-			args->philos[i].left = &args->forks[args->nbr_of_philos - 1];
-		else
-			args->philos[i].left = &args->forks[i - 1];
-		args->philos[i].right = &args->forks[i];
-		args->philos[i].meals_count = 0;
+		args->philos[i].namee = ft_name("philo", i);
+		args->philos[i].check = ft_sem_init(args->philos[i].namee, 1);
+		args->philos[i].name = i;
 		args->philos[i].args = args;
+		++i;
 	}
 	return (0);
 }

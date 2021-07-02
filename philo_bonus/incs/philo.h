@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 12:24:59 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/29 12:01:01 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/07/02 11:53:12 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,18 @@
 # include <string.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <semaphore.h>
+# include <signal.h>
+# include <fcntl.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
 
 typedef struct s_philo
 {
 	int				name;
+	char			*namee;
+	sem_t			*check;
+	pid_t			pid;	
 	int				meals_count;
 	pthread_t		thread;
 	pthread_mutex_t	*left;
@@ -37,18 +45,22 @@ typedef struct s_args
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
-	int				end_of_meals;
 	int				nbr_each_must_eat;
+	int				end_of_meals;
 	int				stop;
-	pthread_mutex_t	stop_mutex;
-	struct timeval	start_t;
-	pthread_mutex_t	*forks;
+
+	sem_t			*acting;
+	sem_t			*finish_meals;
+	sem_t			*finish;
+	sem_t			*forks;
 	t_philo			*philos;
+	struct timeval	start_t;
 }			t_args;
 
-void		*ft_philo(void *phil);
+void		ft_philo(t_philo *philo);
+void		*ft_monitor(void *phil);
 void		ft_print_status(t_philo *philo, char *str);
-int			ft_init(t_args *info, int argc, char *argv[]);
+int			ft_init(t_args *args, int argc, char *av[]);
 int			ft_atoi(const char *str);
 int			ft_error(char *str);
 int			ft_malloc(void *dst, size_t size);

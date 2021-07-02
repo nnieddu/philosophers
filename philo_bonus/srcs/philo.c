@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:04:44 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/29 12:01:01 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/07/02 12:21:41 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,47 +14,42 @@
 
 void	ft_take_fork(t_philo *philo)
 {
-	pthread_mutex_lock(philo->right);
+	sem_wait(philo->args->forks);
 	ft_print_status(philo, "has taken a fork");
-	pthread_mutex_lock(philo->left);
+	sem_wait(philo->args->forks);
 	ft_print_status(philo, "has taken a fork");
 }
 
 void	ft_eat(t_philo *philo)
 {
-	long	ms;
-
-	pthread_mutex_lock(&philo->args->stop_mutex);
+	sem_wait(philo->check);
 	gettimeofday(&philo->last_meal, NULL);
-	ms = ft_time(philo->last_meal) - \
-		ft_time(philo->args->start_t);
-	if (!philo->args->stop)
-		printf("[%ld]\t%d\t %s\n", ms, philo->name, "is eating");
-	philo->meals_count++;
+	ft_print_status(philo, "is eating");
+	philo->meals_count += 1;
 	if (philo->meals_count == philo->args->nbr_each_must_eat)
-		philo->args->end_of_meals++;
-	pthread_mutex_unlock(&philo->args->stop_mutex);
+		sem_post(philo->args->finish_meals);
 	usleep(philo->args->time_to_eat * 1000);
-	pthread_mutex_unlock(philo->right);
-	pthread_mutex_unlock(philo->left);
+	sem_post(philo->args->forks);
+	sem_post(philo->args->forks);
+	sem_post(philo->check);	
 }
 
-void	*ft_philo(void *phil)
+void	ft_philo(t_philo *philo)
 {
-	t_philo	*philo;
+	pthread_t	thread;
 
-	philo = phil;
-	if ((philo->name - 1) % 2 == 0)
+	pthread_create(&thread, NULL, ft_monitor, philo);
+	if (philo->name % 2 == 0)
 		usleep(philo->args->time_to_eat * 1000);
-	while (!philo->args->stop)
+	while (1)
 	{
 		ft_take_fork(philo);
 		ft_eat(philo);
 		if (philo->meals_count == philo->args->nbr_each_must_eat)
-			return (0);
+			exit(0);
 		ft_print_status(philo, "is sleeping");
 		usleep(philo->args->time_to_sleep * 1000);
 		ft_print_status(philo, "is thinking");
 	}
-	return (0);
+	exit(0);
 }
