@@ -29,11 +29,13 @@ void	*ft_monitor(void *phil)
 		gettimeofday(&now, NULL);
 		if (ms >= philo->args->time_to_die)
 		{
-			printf("%ld\t%d\t %s\n", ft_time(now) - ft_time(philo->args->start_t), philo->name + 1, "died");
+			ft_print_status(philo, "is died");
+			// printf("[%ld]\t%d\t %s\n", ft_time(now) - ft_time(philo->args->start_t), philo->name + 1, "died");
 			i = 0;
-			while (i < philo->args->nbr_of_philos)
+			while (i < philo->args->nbr_of_philos - 1)
 				kill(philo->args->philos[i++].pid, SIGTERM);
 			sem_post(philo->args->finish);
+			exit(0);
 			return (NULL);
 		}
 		sem_post(philo->args->acting);
@@ -42,18 +44,18 @@ void	*ft_monitor(void *phil)
 	return (NULL);
 }
 
-void	*ft_monitor_each_meals(void *phil)
-{
-	t_philo			*philo;
-	int				i;
+// void	*ft_monitor_each_meals(void *phil)
+// {
+// 	t_philo			*philo;
+// 	int				i;
 
-	philo = phil;	
-	i = -1;
-	while (++i < philo->args->nbr_of_philos)
-		sem_wait(philo->args->finish_meals);
-	sem_post(philo->args->finish);
-	return (NULL);
-}
+// 	philo = phil;	
+// 	i = -1;
+// 	while (++i < philo->args->nbr_of_philos)
+// 		sem_wait(philo->args->finish_meals);
+// 	sem_post(philo->args->finish);
+// 	return (NULL);
+// }
 
 void	ft_clean(t_args *args)
 {
@@ -71,7 +73,7 @@ void	ft_clean(t_args *args)
 	sem_close(args->finish);
 	sem_close(args->acting);
 	sem_close(args->forks);
-	sem_close(args->finish_meals);
+	// sem_close(args->finish_meals);
 }
 
 static void	ft_create_philos(t_args *args)
@@ -84,13 +86,13 @@ static void	ft_create_philos(t_args *args)
 	{
 		args->philos[i].last_meal = args->start_t;
 		args->philos[i].pid = fork();
-		if (args->philos[i].pid == 0)
-			return (ft_philo(&args->philos[i]));
-		else if (args->philos[i].pid < 0)
+		if (args->philos[i].pid < 0)
 		{
 			ft_error("ERROR: fork failed");
 			exit(1);
 		}
+		if (args->philos[i].pid == 0)
+			return (ft_philo(&args->philos[i]));
 		++i;
 	}
 }

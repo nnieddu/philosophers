@@ -50,7 +50,7 @@ typedef struct s_args
 	int				stop;
 
 	sem_t			*acting;
-	sem_t			*finish_meals;
+	// sem_t			*finish_meals;
 	sem_t			*finish;
 	sem_t			*forks;
 	t_philo			*philos;

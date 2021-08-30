@@ -26,8 +26,8 @@ void	ft_eat(t_philo *philo)
 	gettimeofday(&philo->last_meal, NULL);
 	ft_print_status(philo, "is eating");
 	philo->meals_count += 1;
-	if (philo->meals_count == philo->args->nbr_each_must_eat)
-		sem_post(philo->args->finish_meals);
+	// if (philo->meals_count == philo->args->nbr_each_must_eat)
+	// 	sem_post(philo->args->finish_meals);
 	usleep(philo->args->time_to_eat * 1000);
 	sem_post(philo->args->forks);
 	sem_post(philo->args->forks);
@@ -40,13 +40,14 @@ void	ft_philo(t_philo *philo)
 
 	pthread_create(&thread, NULL, ft_monitor, philo);
 	if (philo->name % 2 == 0)
-		usleep(philo->args->time_to_eat * 1000);
+		usleep(10000);
+		// usleep(philo->args->time_to_eat * 1000);
 	while (1)
 	{
 		ft_take_fork(philo);
 		ft_eat(philo);
 		if (philo->meals_count == philo->args->nbr_each_must_eat)
-			exit(0);
+			break;
 		ft_print_status(philo, "is sleeping");
 		usleep(philo->args->time_to_sleep * 1000);
 		ft_print_status(philo, "is thinking");

@@ -45,7 +45,7 @@ void	*ft_philo(void *phil)
 
 	philo = phil;
 	if ((philo->name - 1) % 2 == 0)
-		usleep(philo->args->time_to_eat * 1000);
+		usleep(10000);
 	while (!philo->args->stop)
 	{
 		ft_take_fork(philo);

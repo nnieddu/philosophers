@@ -94,7 +94,7 @@ int	ft_init_philos(t_args *args)
 	args->acting = ft_sem_init("acting", 1);
 	args->forks = ft_sem_init("forks", args->nbr_of_philos + 1);
 	args->finish = ft_sem_init("finish", 0);
-	args->finish_meals = ft_sem_init("finish_meals", 0);
+	// args->finish_meals = ft_sem_init("finish_meals", 0);
 	if (ft_malloc(&args->philos, sizeof(t_philo) * args->nbr_of_philos))
 		return (ft_error("Error : malloc error\n"));
 	i = 0;
