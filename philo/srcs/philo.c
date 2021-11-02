@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:04:44 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/29 12:01:01 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/03 00:14:46 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,20 @@
 
 void	ft_take_fork(t_philo *philo)
 {
-	pthread_mutex_lock(philo->right);
-	ft_print_status(philo, "has taken a fork");
-	pthread_mutex_lock(philo->left);
-	ft_print_status(philo, "has taken a fork");
+	if (philo->name == 1)
+	{
+		pthread_mutex_lock(philo->left);
+		ft_print_status(philo, "has taken a fork");
+		pthread_mutex_lock(philo->right);
+		ft_print_status(philo, "has taken a fork");
+	}
+	else
+	{
+		pthread_mutex_lock(philo->right);
+		ft_print_status(philo, "has taken a fork");
+		pthread_mutex_lock(philo->left);
+		ft_print_status(philo, "has taken a fork");
+	}
 }
 
 void	ft_eat(t_philo *philo)

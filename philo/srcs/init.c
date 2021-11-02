@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:06:19 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/29 12:01:01 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/02 18:16:53 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,9 @@ int	ft_init_philos(t_args *args)
 {
 	int		i;
 
-	pthread_mutex_init(&args->stop_mutex, NULL);
-	if (ft_malloc(&args->philos, sizeof(t_philo) * args->nbr_of_philos))
+	if (ft_malloc(&args->philos, sizeof(t_philo) * args->nbr_of_philos - 1))
 		return (ft_error("Error : malloc error.\n"));
-	if (ft_malloc(&args->forks, sizeof(pthread_mutex_t) * args->nbr_of_philos))
+	if (ft_malloc(&args->forks, sizeof(pthread_mutex_t) * args->nbr_of_philos - 1))
 	{
 		free(args->philos);
 		return (ft_error("Error : malloc error.\n"));
@@ -55,14 +54,13 @@ int	ft_init_philos(t_args *args)
 	{
 		args->philos[i].name = i + 1;
 		pthread_mutex_init(&args->forks[i], NULL);
-		if (i == 0)
-			args->philos[i].left = &args->forks[args->nbr_of_philos - 1];
-		else
-			args->philos[i].left = &args->forks[i - 1];
+		args->philos[i].left = &args->forks[i - 1];
 		args->philos[i].right = &args->forks[i];
 		args->philos[i].meals_count = 0;
 		args->philos[i].args = args;
 	}
+	args->philos[0].left = &args->forks[args->nbr_of_philos - 1];
+	pthread_mutex_init(&args->stop_mutex, NULL);
 	return (0);
 }
 

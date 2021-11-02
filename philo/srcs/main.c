@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 12:16:59 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/29 12:17:48 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/02 18:24:12 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,9 @@ void	*ft_monitor(void *phil)
 		pthread_mutex_lock(&philo->args->stop_mutex);
 		gettimeofday(&now, NULL);
 		ms = ft_time(now) - ft_time(philo->last_meal);
-		gettimeofday(&now, NULL);
 		if (ms > philo->args->time_to_die && philo->args->stop == 0)
 		{
 			printf("[%ld]\t%d\t %s\n", ms, philo->name, "died");
-			pthread_mutex_unlock(philo->right);
-			pthread_mutex_unlock(philo->left);
 			philo->args->stop = 1;
 		}
 		if (philo->args->end_of_meals == philo->args->nbr_of_philos)
@@ -54,11 +51,13 @@ void	ft_clean(t_args *args)
 	free(args->forks);
 }
 
-void	ft_create_philos(t_args *args)
+int		ft_create_philos(t_args *args)
 {
 	int			i;
-	pthread_t	thread;
+	pthread_t	*thread;
 
+	if (ft_malloc(&thread, sizeof(pthread_t) * args->nbr_of_philos - 1))
+		return (ft_error("Error : malloc error.\n"));
 	gettimeofday(&args->start_t, NULL);
 	i = -1;
 	while (++i < args->nbr_of_philos)
@@ -66,9 +65,10 @@ void	ft_create_philos(t_args *args)
 		args->philos[i].last_meal = args->start_t;
 		pthread_create(&args->philos[i].thread, NULL, \
 			ft_philo, &args->philos[i]);
-		pthread_create(&thread, NULL, ft_monitor, &args->philos[i]);
-		pthread_detach(thread);
+		pthread_create(&thread[i], NULL, ft_monitor, &args->philos[i]);
+		pthread_detach(thread[i]);
 	}
+	return(0);
 }
 
 int	main(int ac, char **av)
