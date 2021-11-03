@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:06:19 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/11/02 18:16:53 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/03 08:54:39 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ void	ft_parse_args(t_args *args, int ac, char **av)
 
 int	ft_check_args(t_args *args, int ac)
 {
-	if (args->nbr_of_philos <= 1)
-		return (ft_error("Error : need at least 2 philosophers.\n"));
-	if (args->time_to_die < 0)
-		return (ft_error("Error : this argument can't be negative.\n"));
-	if (args->time_to_eat < 0)
-		return (ft_error("Error : this argument can't be negative.\n"));
-	if (args->time_to_sleep < 0)
-		return (ft_error("Error : this argument can't be negative.\n"));
+	if (args->nbr_of_philos <= 1 || args->nbr_of_philos > 200)
+		return (ft_error("Error : need at least 2 philosophers (200 max).\n"));
+	if (args->time_to_die < 60)
+		return (ft_error("Error : this argument can't be less than 60ms.\n"));
+	if (args->time_to_eat < 60)
+		return (ft_error("Error : this argument can't be less than 60ms.\n"));
+	if (args->time_to_sleep < 60)
+		return (ft_error("Error : this argument can't be less than 60ms.\n"));
 	if (ac == 6 && args->nbr_each_must_eat <= 0)
 		return (ft_error("Error : last arg can't be less than 1.\n"));
 	return (0);
@@ -42,9 +42,11 @@ int	ft_init_philos(t_args *args)
 {
 	int		i;
 
+	pthread_mutex_init(&args->stop_mutex, NULL);
 	if (ft_malloc(&args->philos, sizeof(t_philo) * args->nbr_of_philos - 1))
 		return (ft_error("Error : malloc error.\n"));
-	if (ft_malloc(&args->forks, sizeof(pthread_mutex_t) * args->nbr_of_philos - 1))
+	if (ft_malloc(&args->forks, sizeof(pthread_mutex_t) * \
+	args->nbr_of_philos - 1))
 	{
 		free(args->philos);
 		return (ft_error("Error : malloc error.\n"));
@@ -54,13 +56,14 @@ int	ft_init_philos(t_args *args)
 	{
 		args->philos[i].name = i + 1;
 		pthread_mutex_init(&args->forks[i], NULL);
-		args->philos[i].left = &args->forks[i - 1];
+		if (i == 0)
+			args->philos[i].left = &args->forks[args->nbr_of_philos - 1];
+		else
+			args->philos[i].left = &args->forks[i - 1];
 		args->philos[i].right = &args->forks[i];
 		args->philos[i].meals_count = 0;
 		args->philos[i].args = args;
 	}
-	args->philos[0].left = &args->forks[args->nbr_of_philos - 1];
-	pthread_mutex_init(&args->stop_mutex, NULL);
 	return (0);
 }
 
