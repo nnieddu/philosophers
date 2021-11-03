@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:06:19 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/11/03 08:54:39 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/06/29 12:01:01 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ void	ft_parse_args(t_args *args, int ac, char **av)
 
 int	ft_check_args(t_args *args, int ac)
 {
-	if (args->nbr_of_philos <= 1 || args->nbr_of_philos > 200)
-		return (ft_error("Error : need at least 2 philosophers (200 max).\n"));
-	if (args->time_to_die < 60)
-		return (ft_error("Error : this argument can't be less than 60ms.\n"));
-	if (args->time_to_eat < 60)
-		return (ft_error("Error : this argument can't be less than 60ms.\n"));
-	if (args->time_to_sleep < 60)
-		return (ft_error("Error : this argument can't be less than 60ms.\n"));
+	if (args->nbr_of_philos <= 1)
+		return (ft_error("Error : need at least 2 philosophers.\n"));
+	if (args->time_to_die < 0)
+		return (ft_error("Error : this argument can't be negative.\n"));
+	if (args->time_to_eat < 0)
+		return (ft_error("Error : this argument can't be negative.\n"));
+	if (args->time_to_sleep < 0)
+		return (ft_error("Error : this argument can't be negative.\n"));
 	if (ac == 6 && args->nbr_each_must_eat <= 0)
 		return (ft_error("Error : last arg can't be less than 1.\n"));
 	return (0);
