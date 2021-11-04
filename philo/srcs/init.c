@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:06:19 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/06/29 12:01:01 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/04 09:04:27 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ int	ft_init_philos(t_args *args)
 	int		i;
 
 	pthread_mutex_init(&args->stop_mutex, NULL);
-	if (ft_malloc(&args->philos, sizeof(t_philo) * args->nbr_of_philos - 1))
+	if (ft_malloc(&args->philos, sizeof(t_philo) * args->nbr_of_philos))
 		return (ft_error("Error : malloc error.\n"));
 	if (ft_malloc(&args->forks, sizeof(pthread_mutex_t) * \
-	args->nbr_of_philos - 1))
+	args->nbr_of_philos))
 	{
 		free(args->philos);
 		return (ft_error("Error : malloc error.\n"));

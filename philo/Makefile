@@ -6,7 +6,7 @@
 #    By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/02 12:04:59 by ninieddu          #+#    #+#              #
-#    Updated: 2021/06/28 11:21:14 by ninieddu         ###   ########lyon.fr    #
+#    Updated: 2021/11/04 09:04:09 by ninieddu         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,31 +16,24 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pthread
 RM = rm -rf
 
-INCS_DIR = incs
+INCS = incs
 VPATH = srcs
-OBJS_DIR = objs
 
-HEADERS = $(wildcard $(INCS_DIR)/*.h)
-SRCS = $(wildcard $(VPATH)/*.c)
-OBJS = $(addprefix $(OBJS_DIR)/, $(notdir $(SRCS:.c=.o)))
+SRCS = srcs/init.c srcs/main.c srcs/philo.c srcs/utils.c
+
+OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
 
 clean :
-	$(RM) $(OBJS_DIR)
+	$(RM) $(OBJS)
 
 fclean : clean
 	$(RM) $(NAME)
 
 re : fclean all
 
-$(OBJS_DIR) :
-	mkdir $(OBJS_DIR)
-
-$(OBJS_DIR)/%.o : %.c $(OBJS_DIR)
-	$(CC) $(CFLAGS) -I $(INCS_DIR) -c $< -o $@
-
-$(NAME) : $(LIBFT_FILE) $(HEADERS) $(OBJS)
-	$(CC) $(CFLAGS) -I $(INCS_DIR) $(OBJS) -o $@
+$(NAME) : $(OBJS)
+	$(CC) $(CFLAGS) -I $(INCS) $(OBJS) -o $(NAME)
 
 .PHONY: all clean fclean re
