@@ -6,40 +6,35 @@
 #    By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/02 12:04:59 by ninieddu          #+#    #+#              #
-#    Updated: 2021/11/04 09:05:34 by ninieddu         ###   ########lyon.fr    #
+#    Updated: 2021/11/05 09:11:25 by ninieddu         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo_bonus
 
+
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pthread
 RM = rm -rf
 
-INCS_DIR = incs
+INCS = incs
 VPATH = srcs
-OBJS_DIR = objs
 
-SRCS = $(wildcard $(VPATH)/*.c)
-OBJS = $(addprefix $(OBJS_DIR)/, $(notdir $(SRCS:.c=.o)))
+SRCS = srcs/init.c srcs/main.c srcs/philo.c srcs/utils.c
+
+OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
 
 clean :
-	$(RM) $(OBJS_DIR)
+	$(RM) $(OBJS)
 
 fclean : clean
 	$(RM) $(NAME)
 
 re : fclean all
 
-$(OBJS_DIR) :
-	mkdir $(OBJS_DIR)
-
-$(OBJS_DIR)/%.o : %.c $(OBJS_DIR)
-	$(CC) $(CFLAGS) -I $(INCS_DIR) -c $< -o $@
-
 $(NAME) : $(OBJS)
-	$(CC) $(CFLAGS) -I $(INCS_DIR) $(OBJS) -o $@
+	$(CC) $(CFLAGS) -I $(INCS) $(OBJS) -o $(NAME)
 
 .PHONY: all clean fclean re
