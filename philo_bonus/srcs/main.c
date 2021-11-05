@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 12:16:59 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/07/02 12:32:08 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/05 11:24:19 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,38 @@ void	*ft_monitor(void *phil)
 	t_philo			*philo;
 	struct timeval	now;
 	long			ms;
-	int				i;
 
 	philo = phil;
 	while (1)
 	{
-		sem_wait(philo->check);
 		sem_wait(philo->args->acting);
 		gettimeofday(&now, NULL);
 		ms = ft_time(now) - ft_time(philo->last_meal);
-		gettimeofday(&now, NULL);
 		if (ms >= philo->args->time_to_die)
 		{
-			ft_print_status(philo, "is died");
-			printf("[%ld]\t%d\t %s\n", ms, philo->name, "died");
-			i = 0;
-			while (i < philo->args->nbr_of_philos - 1)
-				kill(philo->args->philos[i++].pid, SIGTERM);
+			sem_post(philo->args->acting);
+			ft_print_status(philo, "is died", 0);
 			sem_post(philo->args->finish);
 			exit(0);
 		}
 		sem_post(philo->args->acting);
-		sem_post(philo->check);
+	}
+	return (NULL);
+}
+
+void	*ft_master_monitor(void *argz)
+{
+	t_args			*args;
+	int				i;
+
+	args = argz;
+	while (1)
+	{
+		sem_wait(args->finish);
+		i = -1;
+		while (++i < args->nbr_of_philos)
+			kill(args->philos[i].pid, SIGTERM);
+		exit(0);
 	}
 	return (NULL);
 }
@@ -49,25 +59,24 @@ void	ft_clean(t_args *args)
 	int		status;
 
 	i = -1;
+	sem_wait(args->end);
 	while (++i < args->nbr_of_philos)
-	{
 		waitpid(args->philos[i].pid, &status, 0);
-		sem_close(args->philos[i].check);
-		free(args->philos[i].namee);
-	}
-	free(args->philos);
 	sem_close(args->finish);
 	sem_close(args->acting);
 	sem_close(args->forks);
-	// sem_close(args->finish_meals);
+	free(args->philos);
 }
 
 static void	ft_create_philos(t_args *args)
 {
 	int			i;
+	pthread_t	thread;
 
-	gettimeofday(&args->start_t, NULL);
 	i = -1;
+	gettimeofday(&args->start_t, NULL);
+	pthread_create(&thread, NULL, ft_master_monitor, args);
+	pthread_detach(thread);
 	while (++i < args->nbr_of_philos)
 	{
 		args->philos[i].last_meal = args->start_t;

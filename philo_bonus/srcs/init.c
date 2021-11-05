@@ -6,51 +6,13 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:06:19 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/07/02 12:07:20 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/05 11:02:54 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/philo.h"
 
-static int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (*str++)
-		++i;
-	return (i);
-}
-
-char	*ft_name(char *name, int n)
-{
-	char	*result;
-	int		num;
-	int		i;
-
-	i = 0;
-	num = n;
-	while (num)
-	{
-		num /= 10;
-		++i;
-	}
-	result = malloc(sizeof(char) * (i + ft_strlen(name) + 1));
-	if (result == NULL)
-		return (NULL);
-	num = -1;
-	while (++num < i)
-		result[num] = name[num];
-	while (n)
-	{
-		result[i++] = n % 10 + '0';
-		n /= 10;
-	}
-	result[i] = 0;
-	return (result);
-}
-
-static sem_t	*ft_sem_init(const char *name, unsigned int value)
+static sem_t	*ft_sem_init(const char *name, unsigned int value) //static 
 {
 	sem_t	*sem;
 
@@ -94,17 +56,14 @@ int	ft_init_philos(t_args *args)
 	args->acting = ft_sem_init("acting", 1);
 	args->forks = ft_sem_init("forks", args->nbr_of_philos);
 	args->finish = ft_sem_init("finish", 0);
-	// args->finish_meals = ft_sem_init("finish_meals", 0);
+	args->end = ft_sem_init("end", 0);
 	if (ft_malloc(&args->philos, sizeof(t_philo) * args->nbr_of_philos))
 		return (ft_error("Error : malloc error\n"));
-	i = 0;
-	while (i < args->nbr_of_philos)
+	i = -1;
+	while (++i < args->nbr_of_philos)
 	{
-		args->philos[i].namee = ft_name("philo", i);
-		args->philos[i].check = ft_sem_init(args->philos[i].namee, 1);
-		args->philos[i].name = i;
+		args->philos[i].name = i + 1;
 		args->philos[i].args = args;
-		++i;
 	}
 	return (0);
 }

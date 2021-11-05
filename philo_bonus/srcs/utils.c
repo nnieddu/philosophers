@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:08:50 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/07/02 11:21:27 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/05 11:13:32 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,18 @@ int	ft_malloc(void *dst, size_t size)
 	return (0);
 }
 
-void	ft_print_status(t_philo *philo, char *str)
+void	ft_print_status(t_philo *philo, char *str, int x)
 {
 	long			ms;
 	struct timeval	now;
 
 	gettimeofday(&now, NULL);
 	ms = ft_time(now) - ft_time(philo->args->start_t);
-	if (!philo->args->stop)
-		printf("[%ld]\t%d\t %s\n", ms, philo->name, str);
+	sem_wait(philo->args->acting);
+	printf("[%ld]\t%d\t %s\n", ms, philo->name, str);
+	if (x == 1)
+		sem_post(philo->args->acting);
+
 }
 
 long	ft_time(struct timeval now)
