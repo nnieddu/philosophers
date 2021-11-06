@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:08:50 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/11/05 13:30:26 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/06 11:04:56 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_print_status(t_philo *philo, char *str, int x)
 	ms = ft_time(now) - ft_time(philo->args->start_t);
 	sem_wait(philo->args->acting);
 	printf("[%ld]\t%d\t %s\n", ms, philo->name, str);
-	if (x == 1)
+	if (x == 0)
 		sem_post(philo->args->acting);
 }
 

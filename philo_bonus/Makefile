@@ -6,7 +6,7 @@
 #    By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/02 12:04:59 by ninieddu          #+#    #+#              #
-#    Updated: 2021/11/05 15:48:51 by ninieddu         ###   ########lyon.fr    #
+#    Updated: 2021/11/06 10:58:35 by ninieddu         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pthread
 RM = rm -rf
 
-INCS = incs
+INCS = incs/philo.h
 VPATH = srcs
 
 SRCS = srcs/init.c srcs/main.c srcs/philo.c srcs/utils.c
@@ -33,7 +33,7 @@ fclean : clean
 
 re : fclean all
 
-$(NAME) : $(OBJS)
+$(NAME) : $(OBJS) $(INCS)
 	$(CC) $(CFLAGS) -I $(INCS) $(OBJS) -o $(NAME)
 
 .PHONY: all clean fclean re

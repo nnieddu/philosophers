@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:06:19 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/11/05 16:19:07 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/06 11:28:32 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_parse_args(t_args *args, int ac, char **av)
 
 int	ft_check_args(t_args *args, int ac)
 {
-	if (args->nbr_of_philos <= 1)
+	if (args->nbr_of_philos < 1)
 		return (ft_error("Error : need at least 2 philosophers.\n"));
 	if (args->time_to_die < 0)
 		return (ft_error("Error : this argument can't be negative.\n"));
@@ -56,7 +56,7 @@ int	ft_init_philos(t_args *args)
 	args->acting = ft_sem_init("acting", 1);
 	args->forks = ft_sem_init("forks", args->nbr_of_philos);
 	args->finish = ft_sem_init("finish", 0);
-	args->end = ft_sem_init("end", 1);
+	args->end = ft_sem_init("end", 0);
 	if (ft_malloc(&args->philos, sizeof(t_philo) * args->nbr_of_philos))
 		return (ft_error("Error : malloc error\n"));
 	i = -1;

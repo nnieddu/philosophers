@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:04:44 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/11/05 16:31:11 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/06 11:29:58 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 void	ft_take_fork(t_philo *philo)
 {
 	sem_wait(philo->args->forks);
-	ft_print_status(philo, "has taken a fork", 1);
+	ft_print_status(philo, "has taken a fork", 0);
 	sem_wait(philo->args->forks);
-	ft_print_status(philo, "has taken a fork", 1);
+	ft_print_status(philo, "has taken a fork", 0);
 }
 
 void	ft_eat(t_philo *philo)
 {
 	gettimeofday(&philo->last_meal, NULL);
-	ft_print_status(philo, "is eating", 1);
+	ft_print_status(philo, "is eating", 0);
 	philo->meals_count += 1;
 	usleep(philo->args->time_to_eat * 1000);
 	sem_post(philo->args->forks);
@@ -47,9 +47,9 @@ void	ft_philo(t_philo *philo)
 			sem_post(philo->args->end);
 			break ;
 		}
-		ft_print_status(philo, "is sleeping", 1);
+		ft_print_status(philo, "is sleeping", 0);
 		usleep(philo->args->time_to_sleep * 1000);
-		ft_print_status(philo, "is thinking", 1);
+		ft_print_status(philo, "is thinking", 0);
 	}
-	return ;
+	exit(0);
 }
