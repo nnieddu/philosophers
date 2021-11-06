@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 12:24:59 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/11/05 11:09:30 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/05 13:21:21 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_args
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				nbr_each_must_eat;
+	int				stop;
 	sem_t			*acting;
 	sem_t			*finish;
 	sem_t			*end;

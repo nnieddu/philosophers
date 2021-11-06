@@ -6,12 +6,11 @@
 #    By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/02 12:04:59 by ninieddu          #+#    #+#              #
-#    Updated: 2021/11/05 09:11:25 by ninieddu         ###   ########lyon.fr    #
+#    Updated: 2021/11/05 15:48:51 by ninieddu         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo_bonus
-
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pthread

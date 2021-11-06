@@ -6,13 +6,13 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:06:19 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/11/05 11:02:54 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/05 16:19:07 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/philo.h"
 
-static sem_t	*ft_sem_init(const char *name, unsigned int value) //static 
+sem_t	*ft_sem_init(const char *name, unsigned int value)
 {
 	sem_t	*sem;
 
@@ -56,7 +56,7 @@ int	ft_init_philos(t_args *args)
 	args->acting = ft_sem_init("acting", 1);
 	args->forks = ft_sem_init("forks", args->nbr_of_philos);
 	args->finish = ft_sem_init("finish", 0);
-	args->end = ft_sem_init("end", 0);
+	args->end = ft_sem_init("end", 1);
 	if (ft_malloc(&args->philos, sizeof(t_philo) * args->nbr_of_philos))
 		return (ft_error("Error : malloc error\n"));
 	i = -1;

@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:08:50 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/11/05 11:13:32 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/05 13:30:26 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	ft_print_status(t_philo *philo, char *str, int x)
 	printf("[%ld]\t%d\t %s\n", ms, philo->name, str);
 	if (x == 1)
 		sem_post(philo->args->acting);
-
 }
 
 long	ft_time(struct timeval now)

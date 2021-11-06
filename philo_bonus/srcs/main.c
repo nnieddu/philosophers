@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 12:16:59 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/11/05 11:24:19 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/05 17:13:11 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ void	*ft_monitor(void *phil)
 		if (ms >= philo->args->time_to_die)
 		{
 			sem_post(philo->args->acting);
-			ft_print_status(philo, "is died", 0);
+			ft_print_status(philo, "is dead.", 0);
 			sem_post(philo->args->finish);
-			exit(0);
+			sem_post(philo->args->end);
+			return (NULL);
 		}
 		sem_post(philo->args->acting);
 	}
-	return (NULL);
 }
 
 void	*ft_master_monitor(void *argz)
@@ -41,15 +41,12 @@ void	*ft_master_monitor(void *argz)
 	t_args			*args;
 	int				i;
 
+	i = -1;
 	args = argz;
-	while (1)
-	{
-		sem_wait(args->finish);
-		i = -1;
-		while (++i < args->nbr_of_philos)
-			kill(args->philos[i].pid, SIGTERM);
-		exit(0);
-	}
+	sem_wait(args->finish);
+	args->stop = 1;
+	while (++i < args->nbr_of_philos)
+		kill(args->philos[i].pid, SIGTERM);
 	return (NULL);
 }
 
@@ -60,15 +57,20 @@ void	ft_clean(t_args *args)
 
 	i = -1;
 	sem_wait(args->end);
-	while (++i < args->nbr_of_philos)
-		waitpid(args->philos[i].pid, &status, 0);
+	if (args->stop == 0)
+	{
+		sem_wait(args->end);
+		while (++i < args->nbr_of_philos)
+			waitpid(args->philos[i].pid, &status, 0);
+	}
 	sem_close(args->finish);
 	sem_close(args->acting);
 	sem_close(args->forks);
+	sem_close(args->end);
 	free(args->philos);
 }
 
-static void	ft_create_philos(t_args *args)
+void	ft_create_philos(t_args *args)
 {
 	int			i;
 	pthread_t	thread;
@@ -85,10 +87,10 @@ static void	ft_create_philos(t_args *args)
 		{
 			ft_error("Error : fork failed !");
 			ft_clean(args);
-			exit(1);
+			exit (1);
 		}
 		if (args->philos[i].pid == 0)
-			return (ft_philo(&args->philos[i]));
+			ft_philo(&args->philos[i]);
 	}
 }
 

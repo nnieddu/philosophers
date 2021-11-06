@@ -6,7 +6,7 @@
 /*   By: ninieddu <ninieddu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 09:04:44 by ninieddu          #+#    #+#             */
-/*   Updated: 2021/11/05 11:21:09 by ninieddu         ###   ########lyon.fr   */
+/*   Updated: 2021/11/05 16:31:11 by ninieddu         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	ft_eat(t_philo *philo)
 void	ft_philo(t_philo *philo)
 {
 	pthread_t	thread;
-	
+
 	pthread_create(&thread, NULL, ft_monitor, philo);
 	pthread_detach(thread);
 	if (philo->name % 2 == 0)
@@ -44,13 +44,12 @@ void	ft_philo(t_philo *philo)
 		ft_eat(philo);
 		if (philo->meals_count == philo->args->nbr_each_must_eat)
 		{
-			// sem_post(philo->args->finish);
 			sem_post(philo->args->end);
-			break;
+			break ;
 		}
 		ft_print_status(philo, "is sleeping", 1);
 		usleep(philo->args->time_to_sleep * 1000);
 		ft_print_status(philo, "is thinking", 1);
 	}
-	exit(0);
+	return ;
 }
